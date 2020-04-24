@@ -15,7 +15,6 @@ const userSchema = new Schema(
     },
 
     profilePicture: {
-      imgName: String,
       imgPath: { type: String, default: "./theme/images/users/default_profile.png" }
     },
 

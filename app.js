@@ -27,7 +27,7 @@ const app = express();
 // use session here
 require('./config/session.config')(app);
 // Set up passport
-require('./config/session.config')
+require('./config/passport.config')(app);
 
 // Middleware Setup
 app.use(logger('dev'));
@@ -44,10 +44,10 @@ app.use(require('node-sass-middleware')({
 }));
 
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'hbs');
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 
 
