@@ -10,12 +10,12 @@ const User = require('../models/User.model');
 
 
 
-router.post('/signup', (req, res, next) => {
+router.post('/api/signup', (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     res.status(401).json({
-      message: 'All fields are mandatory. Please provide your username, email and password.'
+      message: 'All fields are mandatory. Please provide your email and password.'
     });
     return;
   }
@@ -60,7 +60,7 @@ router.post('/signup', (req, res, next) => {
     .catch(err => next(err));
 });
 
-router.post('/login', routeGuard, (req, res, next) => {
+router.post('/api/login', (req, res, next) => {
   passport.authenticate('local', (err, user, failureDetails) => {
     if (err) {
       res.status(500).json({ message: 'Something went wrong with database query.' });
@@ -78,18 +78,18 @@ router.post('/login', routeGuard, (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/logout', routeGuard, (req, res, next) => {
+router.post('/api/logout', (req, res, next) => {
   req.logout();
   res.status(200).json({ message: 'Logout successful!' });
 });
 
-router.get('/isLoggedIn', (req, res) => {
+router.get('/api/isLoggedIn', (req, res) => {
   if (req.user) {
     req.user.passwordHash = undefined;
     res.status(200).json({ user: req.user });
     return;
   }
-  res.status(401).json({ message: 'You are not logged in!' });
+  res.status(401).json({ message: 'Unauthorized access!' });
 });
 
 module.exports = router;
