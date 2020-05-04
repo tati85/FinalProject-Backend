@@ -11,11 +11,11 @@ const User = require('../models/User.model');
 
 
 router.post('/api/signup', (req, res, next) => {
-  const { email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
-  if (!email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     res.status(401).json({
-      message: 'All fields are mandatory. Please provide your email and password.'
+      message: 'All fields are mandatory. Please provide your Firstname, LastName, email and password.'
     });
     return;
   }
@@ -34,6 +34,8 @@ router.post('/api/signup', (req, res, next) => {
     .then(salt => bcryptjs.hash(password, salt))
     .then(hashedPassword => {
       return User.create({
+        firstName,
+        lastName,
         email,
         password: hashedPassword
       })
@@ -50,7 +52,7 @@ router.post('/api/signup', (req, res, next) => {
             res.status(500).json({ message: err.message });
           } else if (err.code === 11000) {
             res.status(500).json({
-              message: 'Username and email need to be unique. Either username or email is already used.'
+              message: 'Username and email need to be unique. Email is already used.'
             });
           } else {
             next(err);

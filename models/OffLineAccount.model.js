@@ -5,15 +5,18 @@ const offLineAccountSchema = new Schema(
   {
     name: {
       type: String
-
     },
-    dueDate: {
-      type: Date
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
     },
     frecuency: {
       type: String,
       enum: ['once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'semiannual', 'annual'],
       default: 'once'
+    },
+    dueDate: {
+      type: Date
     },
     amount: {
       type: Number
@@ -40,6 +43,6 @@ const offLineAccountSchema = new Schema(
   }
 );
 
-const OffLineAccount = mongoose.model('Transaction', offLineAccountSchema);
+const OffLineAccount = mongoose.model('OffLineAccount', offLineAccountSchema);
 
 module.exports = OffLineAccount;
