@@ -51,7 +51,12 @@ app.locals.title = 'Express - Generated with IronGenerator';
 //Routes
 app.use('/', require('./routes/index.routes'));
 app.use('/', require('./routes/authentication.routes'));
-app.use('/')
+app.use('/', require('./routes/plaid.routes'));
+app.use('/', require('./routes/Creditreminder.routes'));
+app.use('/', require('./routes/OffLineAccountreminder.routes'));
+app.use('/', require('./routes/offLineAccount.route'));
+app.use('/', require('./routes/user.routes'));
+
 
 
 

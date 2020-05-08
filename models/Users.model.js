@@ -11,11 +11,16 @@ const userSchema = new Schema(
     lastName: {
       type: String,
       trim: true,
-
     },
 
-    profilePicture: {
-      imgPath: { type: String, default: "./theme/images/users/default_profile.png" }
+    image: {
+      type: String,
+      default: "./theme/images/users/default_profile.png"
+    },
+
+    phoneNumber: {
+      type: Number,
+      trim: true,
     },
 
     password: {
@@ -29,13 +34,14 @@ const userSchema = new Schema(
       unique: 'Email already exists',
       match: [/.+\@.+\..+/, 'Please fill a valid email address'],
       required: 'Email is required'
-    },
+    }
   },
   {
     timestamps: true
   }
 );
 
-const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+const Users = mongoose.model('Users', userSchema);
+
+module.exports = Users;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var User = require('../models/Users.model');
 
 mongoose
     .connect('mongodb://localhost/server', {

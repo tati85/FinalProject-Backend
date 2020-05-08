@@ -8,12 +8,14 @@ const offLineAccountSchema = new Schema(
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User"
+      ref: "Users"
     },
+    //number of days
     frecuency: {
-      type: String,
-      enum: ['once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'semiannual', 'annual'],
-      default: 'once'
+      type: Number,
+      // //['once', 'weekly', 'biweekly', 'monthly', 'quarterly', 'semiannual', 'annual']
+      // enum: [0, 1, 2, 3, 5, 6],
+      default: 0
     },
     dueDate: {
       type: Date
@@ -21,19 +23,11 @@ const offLineAccountSchema = new Schema(
     amount: {
       type: Number
     },
-    trasactionId: {
-      type: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "Transaction"
-        }
-      ]
-    },
     reminderId: {
       type: [
         {
           type: Schema.Types.ObjectId,
-          ref: "Remainder"
+          ref: "OffLineAccountreminder"
         }
       ]
     }
@@ -42,6 +36,35 @@ const offLineAccountSchema = new Schema(
     timestamps: true
   }
 );
+
+class OffLine {
+  static getLastByName() {
+    return this.aggregate([
+      {
+        $match: {
+          active: true
+        }
+      },
+      { $sort: { name: 1, created_at: 1 } },
+      {
+        $group:
+        {
+          _id: "name",
+          lastCreated: { $last: "$created_at" }
+        }
+      }
+    ]
+
+    ).exec()
+  }
+  static insertRecord(data) {
+    return this.create(data)
+  }
+
+
+
+}
+offLineAccountSchema.loadClass(OffLine)
 
 const OffLineAccount = mongoose.model('OffLineAccount', offLineAccountSchema);
 

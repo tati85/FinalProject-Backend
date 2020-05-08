@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const reminderSchema = new Schema(
+const ReminderSchema = new Schema(
   {
     name: {
       type: String
@@ -32,6 +32,6 @@ const reminderSchema = new Schema(
   }
 );
 
-const Reminder = mongoose.model('Reminder', reminderSchema);
+const Reminder = mongoose.model('Reminder', ReminderSchema);
 
 module.exports = Reminder;

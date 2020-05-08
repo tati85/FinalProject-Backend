@@ -20,7 +20,7 @@ const creditCardAccountSchema = new Schema(
         institutionId: {
             type: String
         },
-        instituitioName: {
+        institutionName: {
             type: String
         },
         accountName: {
@@ -31,7 +31,19 @@ const creditCardAccountSchema = new Schema(
         },
         accountSubtype: {
             type: String
+        },
+        dueDate: {
+            type: Date
+        },
+        reminderId: {
+            type: [
+                {
+                    type: Schema.Types.ObjectId,
+                    ref: "Creditreminder"
+                }
+            ]
         }
+
     },
     {
         timestamps: true

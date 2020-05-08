@@ -6,7 +6,7 @@ const bcryptjs = require('bcryptjs');
 const mongoose = require('mongoose');
 const saltRounds = 10;
 const passport = require('passport');
-const User = require('../models/User.model');
+const Users = require('../models/Users.model');
 
 
 
@@ -33,7 +33,7 @@ router.post('/api/signup', (req, res, next) => {
     .genSalt(saltRounds)
     .then(salt => bcryptjs.hash(password, salt))
     .then(hashedPassword => {
-      return User.create({
+      return Users.create({
         firstName,
         lastName,
         email,
