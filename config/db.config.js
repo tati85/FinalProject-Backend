@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 var User = require('../models/Users.model');
+// var CreditCardAccount = require('../models/CreditCardAccount.model');
+// var CreditReminder = require('../models/CreditReminder.model');
+// var OffLineAccount = require('../models/OffLineAccount.model');
+// var OffLineAccountReminder = require('../models/OffLineAccountReminder.model');
 
 mongoose
-    .connect('mongodb://localhost/server', {
+    .connect('mongodb://localhost/rem-bill-server', {
         useCreateIndex: true,
         useNewUrlParser: true,
         useUnifiedTopology: true

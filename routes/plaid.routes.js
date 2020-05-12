@@ -17,7 +17,7 @@ const client = new plaid.Client(
     PLAID_CLIENT_ID,
     PLAID_SECRET,
     PLAID_PUBLIC_KEY,
-    plaid.environments.development,
+    plaid.environments.sandbox,
     {
         version: "2019-05-29"
     }
@@ -31,9 +31,11 @@ var ITEM_ID = null;
 router.post('/api/creditcard/add', (req, res) => {
     passport.authenticate('local'),
         (req, res) => {
+            console.log("inside the add route on server")
             PUBLIC_TOKEN = req.body.public_token;
             const userId = req.user.id;
             const { name, institution_id } = req.body.metadata.institution;
+            console.log("inside server to insert in db " + req.body.metadata.institution)
 
             if (PUBLIC_TOKEN) {
                 client
@@ -49,20 +51,21 @@ router.post('/api/creditcard/add', (req, res) => {
                             .then(account => {
                                 if (account)
                                     console.log("account already exist")
-                                else {
-                                    const newAccount = new CreditCardAccount({
-                                        userId: userId,
-                                        accesToken: ACCESS_TOKEN,
-                                        itemId: ITEM_ID,
-                                        institutionId: institution_id,
-                                        instituitionName: name
-
-                                    });
-                                    newAccount.save()
-                                        .then(account => res.status(200).json(account));
-                                }
                             })
-                            .catch(err => res.status(err)); //error from mogoose
+                            .catch((err) => {
+                                console.log("not found account in db")
+                                const newAccount = new CreditCardAccount({
+                                    userId: userId,
+                                    accesToken: ACCESS_TOKEN,
+                                    itemId: ITEM_ID,
+                                    institutionId: institution_id,
+                                    instituitionName: name
+                                });
+                                newAccount.save()
+                                    .then(account => res.status(200).json(account));
+
+                            })
+
                     })
                     .catch(err => res.status(err));//error from plaid
             }
@@ -79,25 +82,26 @@ router.post('/api/creditcard/add', (req, res) => {
             }
     });
 
-    //get all accounts BY USER
-    router.get('/api/credicard/accounts', (req, res) => {
-        passport.authenticate('local'),
-            (req, res) => {
-                CreditCardAccount.find({ userId: req.user.id })
-                    .populate("reminderId")
-                    .then((accountsFromDb) => { res.status(200).json(accountsFromDb) })
-                    .catch((err) => res.status(400).json(err));
-            }
-    });
-    //ALL ACCOUNT BY USER WITHout reminderS
+    // //get all accounts BY USER
     // router.get('/api/credicard/accounts', (req, res) => {
     //     passport.authenticate('local'),
     //         (req, res) => {
     //             CreditCardAccount.find({ userId: req.user.id })
+    //                 .populate("reminderId")
     //                 .then((accountsFromDb) => { res.status(200).json(accountsFromDb) })
     //                 .catch((err) => res.status(400).json(err));
     //         }
     // });
+    //ALL ACCOUNT BY USER WITHout reminderS
+    router.get('/api/credicard/accounts', (req, res) => {
+        passport.authenticate('local'),
+            (req, res) => {
+                console.log()
+                CreditCardAccount.find({ userId: req.user.id })
+                    .then((accountsFromDb) => { res.status(200).json(accountsFromDb) })
+                    .catch((err) => res.status(400).json(err));
+            }
+    });
 
     //get 30 last days of transactions
     router.post('/api/creditcard/transactions', (req, res) => {
@@ -136,11 +140,12 @@ router.delete('/api/creditcard/delete/:id',
         (req, res, ) => {
             CreditCardAccount.findById(req.params.id)
                 .then(account => {
-                    account.reminderId.map(reminder){
+                    account.reminderId.map(reminder => {
                         CreditReminder.findByIdAndDelete(remainder._id)
                             .then(value => { console.log("deleted") })
                             .catch((err) => { console.log(err) })
-                    }
+
+                    });
 
                 })
                 .catch((err) => { console.log() })
@@ -180,7 +185,7 @@ router.post('/api/creditcard/balance', (req, res) => {
 });
 
 //get all acccounts in next 30 days(bills) 
-router.get('/api/offlineaccount/bills', (req, res) => {
+router.get('/api/creditcard/bills', (req, res) => {
     passport.authenticate('local'),
         (req, res) => {
             const now = moment();

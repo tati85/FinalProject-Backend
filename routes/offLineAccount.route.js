@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const OffLineAccount = require('../models/OffLineAccount.model');
-const OffLineAccountReminder = require('../models/OffLineAccountRemainder.model');
+const OffLineAccountReminder = require('../models/OffLineAccountReminder.model');
 
 //delete account
 router.delete('/api/offlineaccount/delete/:id', (req, res) => {
@@ -10,11 +10,14 @@ router.delete('/api/offlineaccount/delete/:id', (req, res) => {
         (req, res) => {
             OffLineAccount.findById(req.params.id)
                 .then(account => {
-                    account.reminderId.map(reminder){
+                    account.reminderId.map(reminder => {
                         OffLineAccountReminder.findByIdAndDelete(remainder._id)
                             .then(value => { console.log("deleted") })
                             .catch((err) => { console.log(err) })
-                    }
+
+                    })
+
+
 
                 })
                 .catch((err) => { console.log() })
