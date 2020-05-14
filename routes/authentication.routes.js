@@ -32,16 +32,15 @@ router.post('/api/signup', (req, res, next) => {
     });
     return;
   }
-
   bcryptjs
     .genSalt(saltRounds)
     .then(salt => bcryptjs.hash(password, salt))
     .then(hashedPassword => {
-      return User.create({
+      return Users.create({
         firstName,
         lastName,
         email,
-        passwordHash: hashedPassword
+        password: hashedPassword
       })
         .then(user => {
           // user.passwordHash = undefined;
@@ -51,8 +50,8 @@ router.post('/api/signup', (req, res, next) => {
               return res
                 .status(500)
                 .json({ message: 'Something went wrong with login!' });
-            user.passwordHash = undefined;
-            res.status(200).json({ message: 'Login successful!', user });
+            user.password = "";
+            res.status(200).json(user);
           });
         })
         .catch(err => {
@@ -64,7 +63,7 @@ router.post('/api/signup', (req, res, next) => {
                 'Email need to be unique.  Email is already used.'
             });
           } else {
-            next(err);
+            console.log(err);
           }
         });
     })
@@ -73,12 +72,6 @@ router.post('/api/signup', (req, res, next) => {
 
 //login
 router.post('/api/login', (req, res, next) => {
-  // const { errors, isValid } = validateLoginInput(req.body);
-
-  // if (!isValid) {
-  //   console.log("login no valid")
-  //   return res.status(400).json(errors);
-  // }
 
   passport.authenticate('local', (err, user, failureDetails) => {
     if (err) {
@@ -91,31 +84,34 @@ router.post('/api/login', (req, res, next) => {
 
     req.login(user, err => {
       if (err) return res.status(500).json({ message: 'Something went wrong with login!' });
-      user.passwordHash = undefined;
+      user.password = "";
       console.log(user)
-      res.status(200).json({ message: 'Login successful!', user });
+      res.status(200).json(user);
     });
-  })(req, res, next);
+  })(req, res);
 });
 
 //logout
-router.post('/api/logout', (req, res, next) => {
+router.post('/api/logout', (req, res) => {
   req.logout();
-  res.status(200).json({ message: 'Logout successful!' });
+  res.status(200).json();
 });
 
 //update  user's profile
-router.patch('/api/user/profile', upLoadCloud.single('image'), (req, res, next) => {
+router.post('/api/user/profile', upLoadCloud.single('image'), (req, res, next) => {
 
-  const { errors, isValid } = validateRegisterInput(req.body);
+
   const { firstName, lastName, email, password } = req.body;
   let update = { firstName, lastName, email };
+  update.image = req.file.url;
 
   // Check validation
   // if (!isValid) {
   //   console.log("update no valid in profile")
   //   return res.status(400).json(errors);
   // }
+  console.log(req.body.password + " password for update")
+  console.log(req.file.url + '  **********************url')
 
   if (req.body.password) {
     bcryptjs
@@ -123,13 +119,11 @@ router.patch('/api/user/profile', upLoadCloud.single('image'), (req, res, next) 
       .then(salt => bcryptjs.hash(password, salt))
       .then(hashedPassword => update.password = hashedPassword)
       .catch((err) => { console.log(err) })
-
   }
 
-
-  Users.findByIdAndUpdate(req.user.id, update, { image: req.file.url },
+  Users.findByIdAndUpdate(req.user.id, update,
     { new: true })
-    .then((updatedUser) => { res.status(200).json(updatedUser) })
+    .then((user) => { res.status(200).json(user) })
     .catch((err) => req.status(400).json(err));
 
 });

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
 const userSchema = new Schema(
   {
     firstName: {
@@ -15,7 +16,7 @@ const userSchema = new Schema(
 
     image: {
       type: String,
-      default: "./theme/images/users/default_profile.png"
+      default: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS7T8NdXOWlYT4z7l1OarCUSK-l4gfCqUqcshOSyTxdfbYJRApi&usqp=CAU"
     },
 
     phoneNumber: {
