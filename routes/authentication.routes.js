@@ -1,7 +1,5 @@
-const { Router } = require('express');
-
-const router = new Router();
-
+const express = require('express');
+const router = express.Router();
 const bcryptjs = require('bcryptjs');
 const mongoose = require('mongoose');
 const saltRounds = 10;
@@ -72,6 +70,7 @@ router.post('/api/signup', (req, res, next) => {
 
 //login
 router.post('/api/login', (req, res, next) => {
+  console.log("inside login in server")
 
   passport.authenticate('local', (err, user, failureDetails) => {
     if (err) {
@@ -98,48 +97,29 @@ router.post('/api/logout', (req, res) => {
 });
 
 //update  user's profile
-router.post('/api/user/profile', upLoadCloud.single('image'), (req, res, next) => {
-
-
-  const { firstName, lastName, email, password } = req.body;
-  let update = { firstName, lastName, email };
-  update.image = req.file.url;
-
-  // Check validation
-  // if (!isValid) {
-  //   console.log("update no valid in profile")
-  //   return res.status(400).json(errors);
-  // }
-  console.log(req.body.password + " password for update")
-  console.log(req.file.url + '  **********************url')
-
-  if (req.body.password) {
-    bcryptjs
-      .genSalt(saltRounds)
-      .then(salt => bcryptjs.hash(password, salt))
-      .then(hashedPassword => update.password = hashedPassword)
-      .catch((err) => { console.log(err) })
-  }
-
-  Users.findByIdAndUpdate(req.user.id, update,
-    { new: true })
-    .then((user) => { res.status(200).json(user) })
-    .catch((err) => req.status(400).json(err));
-
-});
+router.post('/api/user/profile', upLoadCloud.single('image'),
+  (req, res, next) => {
+    // const { firstName, lastName, email, phoneNumber } = req.body;
+    let update = req.body;
+    update.image = req.file.url;
+    Users.findByIdAndUpdate(req.user.id, update,
+      { new: true })
+      .then((user) => { res.status(200).json(user) })
+      .catch((err) => res.status(400).json(err));
+  });
 
 //get user
-router.get('/api/user', (req, res, next) => {
-  passport.authenticate('local'),
-    (req, res) => {
-      Users.findById(req.user.id)
-        .then((user) => {
-          user.password = "";
-          req.status(200).json(user)
-        })
-        .catch((err) => req.status(400).json(err));
-    }
-})
+// router.get('/api/user', (req, res, next) => {
+//   passport.authenticate('local'),
+//     (req, res) => {
+//       Users.findById(req.user.id)
+//         .then((user) => {
+//           user.password = "";
+//           res.status(200).json(user)
+//         })
+//         .catch((err) => res.status(400).json(err));
+//     }
+// })
 
 
 module.exports = router;

@@ -12,8 +12,10 @@ router.get('/', (req, res) => res.json({ message: 'Index rendered.' }));
 
 // const l = {
 //     name: "rent",
-//     dueDate: "2020-05-15"
-
+//     dueDate: "2020-05-15",
+//     userId: "5ebb3bd545af250a37f736e6",
+//     amount: 800,
+//     frecuency: 7
 // }
 // OffLineAccount.create(l)
 //     .then(a => console.log("created"))

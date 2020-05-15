@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-var User = require('../models/Users.model');
+var Users = require('../models/Users.model');
 // var CreditCardAccount = require('../models/CreditCardAccount.model');
 // var CreditReminder = require('../models/CreditReminder.model');
-// var OffLineAccount = require('../models/OffLineAccount.model');
+var OffLineAccount = require('../models/OffLineAccount.model');
 // var OffLineAccountReminder = require('../models/OffLineAccountReminder.model');
 
 mongoose

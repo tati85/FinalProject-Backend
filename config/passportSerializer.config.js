@@ -7,16 +7,12 @@ const User = require('../models/Users.model')
 // Configure Passport authenticated session persistence.
 
 
-passport.serializeUser((user, callback) => {
-  callback(null, user._id);
+passport.serializeUser((loggedInUser, next) => {
+  next(null, loggedInUser._id)
 });
 
-passport.deserializeUser((id, callback) => {
-  User.findById(id)
-    .then(user => {
-      callback(null, user);
-    })
-    .catch(error => {
-      callback(error);
-    });
+passport.deserializeUser((userIdFromSession, next) => {
+  User.findById(userIdFromSession)
+    .then(fullUserDoc => next(null, fullUserDoc))
+    .catch(err => next(err));
 });

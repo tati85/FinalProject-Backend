@@ -63,11 +63,11 @@ app.locals.title = 'Express - Generated with IronGenerator';
 
 //Routes
 app.use('/', require('./routes/index.routes'));
+app.use('/', require('./routes/offLineAccount'));
 app.use('/', require('./routes/authentication.routes'));
 app.use('/', require('./routes/plaid.routes'));
 app.use('/', require('./routes/CreditReminder.routes'));
 app.use('/', require('./routes/OffLineAccountReminder.routes'));
-app.use('/', require('./routes/offLineAccount.route'));
 
 
 // mongoose.connection.on('open', function (ref) {

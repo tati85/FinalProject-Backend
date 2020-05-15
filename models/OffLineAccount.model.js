@@ -66,6 +66,6 @@ class OffLine {
 }
 offLineAccountSchema.loadClass(OffLine)
 
-const OffLineAccount = mongoose.model('OffLineAccount', offLineAccountSchema);
+const OffLineAccount = mongoose.model('OffLineAccount', offLineAccountSchema, "offlineaccount");
 
 module.exports = OffLineAccount;
