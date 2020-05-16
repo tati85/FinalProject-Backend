@@ -99,8 +99,18 @@ router.post('/api/logout', (req, res) => {
 //update  user's profile
 router.post('/api/user/profile', upLoadCloud.single('image'),
   (req, res, next) => {
-    // const { firstName, lastName, email, phoneNumber } = req.body;
-    let update = req.body;
+    console.log(req.body + "   req.body")
+    const { firstName, lastName, email, phoneNumber } = req.body;
+    const update = {
+      firstName,
+      lastName,
+      email,
+      phoneNumber
+    }
+    // let update = req.body;
+    // console.log("this is req.body  " + req.body);
+
+    console.log("this is file  " + req.file);
     update.image = req.file.url;
     Users.findByIdAndUpdate(req.user.id, update,
       { new: true })

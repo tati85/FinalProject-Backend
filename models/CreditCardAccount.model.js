@@ -8,6 +8,13 @@ const creditCardAccountSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "User"
         },
+        balace: {
+            type: Number
+        }
+        ,
+        available: {
+            type: Number
+        },
         accesToken: {
             type: String
         },

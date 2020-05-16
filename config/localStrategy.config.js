@@ -6,12 +6,15 @@ const LocalStrategy = require('passport-local').Strategy;
 
 
 
-passport.use(
+passport.use('local',
   new LocalStrategy({
     usernameField: 'email',
-    passwordField: 'password'
+    passwordField: 'password',
+    passReqToCallback: true
   },
-    (email, password, done) => {
+    (req, email, password, done) => {
+      if (email)
+        email = email.toLowerCase();
       User.findOne({ email })
         .then(user => {
           if (!user) {
