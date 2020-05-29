@@ -93,11 +93,11 @@ router.post('/api/login', (req, res, next) => {
 //logout
 router.post('/api/logout', (req, res) => {
   req.logout();
-  res.status(200).json();
+  res.status(200).json({});
 });
 
 //update  user's profile
-router.post('/api/user/profile', upLoadCloud.single('image'),
+router.put('/api/user/profile', upLoadCloud.single('image'),
   (req, res, next) => {
     console.log(req.body + "   req.body")
     const { firstName, lastName, email, phoneNumber } = req.body;
